@@ -106,27 +106,37 @@ export default function MenuPage() {
     }
   }, []);
 
-  // Scroll direction listener to show/hide category nav (optimized)
+  // Scroll direction listener to show/hide header unificado (optimized with requestAnimationFrame)
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     let lastScrollY = window.scrollY;
-    
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      // Minimum scroll diff to trigger visibility change
-      if (Math.abs(currentScrollY - lastScrollY) < 10) return;
+    let ticking = false;
 
-      if (currentScrollY < 50) {
-        setIsNavVisible(true);
-      } else if (currentScrollY > lastScrollY) {
-        setIsNavVisible(false);
-      } else {
-        setIsNavVisible(true);
-      }
+    const updateScrollDir = () => {
+      const scrollY = window.scrollY;
       
-      lastScrollY = currentScrollY;
+      // Always show near the top of the page
+      if (scrollY < 50) {
+        setIsNavVisible(true);
+      } else {
+        // If scrolling down, hide; if scrolling up, show instantly
+        if (scrollY > lastScrollY) {
+          setIsNavVisible(false);
+        } else if (scrollY < lastScrollY) {
+          setIsNavVisible(true);
+        }
+      }
+
+      lastScrollY = scrollY > 0 ? scrollY : 0;
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScrollDir);
+        ticking = true;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
