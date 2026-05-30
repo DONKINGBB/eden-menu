@@ -781,7 +781,13 @@ export default function MenuPage() {
                 <div className="option-group-title">Notas especiales para tu pedido</div>
                 <textarea 
                   className="notes-textarea" 
-                  placeholder="Ej: sin aderezo, aderezo aparte, sin cebolla, etc..."
+                  placeholder={
+                    selectedProduct.category === 'jugos' || 
+                    selectedProduct.category === 'infusiones' || 
+                    selectedProduct.category === 'embotellada'
+                      ? "Ej: sin hielo, con popote, sin azúcar, etc..."
+                      : "Ej: sin aderezo, aderezo aparte, sin cebolla, etc..."
+                  }
                   value={customNotes}
                   onChange={e => setCustomNotes(e.target.value)}
                 />
