@@ -238,13 +238,17 @@ export const MENU_ITEMS: MenuItem[] = [
     name: 'Electrolit',
     price: 25,
     image: '/images/cold_pressed_juice.png',
-    category: 'embotellada'
+    category: 'embotellada',
+    customizable: true,
+    flavors: ['Coco', 'Uva', 'Fresa', 'Mora Azul', 'Limón']
   },
   {
     id: 'refresco-cero',
     name: 'Refresco Cero Azúcar',
     price: 25,
     image: '/images/cold_pressed_juice.png',
-    category: 'embotellada'
+    category: 'embotellada',
+    customizable: true,
+    flavors: ['Coca-Cola Sin Azúcar', 'Sprite Zero', 'Sidral Mundet Sin Azúcar']
   }
 ];
