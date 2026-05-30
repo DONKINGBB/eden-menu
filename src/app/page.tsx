@@ -392,57 +392,59 @@ export default function MenuPage() {
 
   return (
     <>
-      {/* HEADER */}
-      <header className="header">
-        <div className="container header-content">
-          <div className="logo-container">
-            <img src="/logo.png" alt="Edén Logo" className="logo-img" />
-            <div className="logo-text">
-              EDÉN
-              <span className="logo-sub">barra de ensaladas</span>
+      <div className={`sticky-header-container ${isNavVisible ? 'visible' : 'hidden'}`}>
+        {/* HEADER */}
+        <header className="header">
+          <div className="container header-content">
+            <div className="logo-container">
+              <img src="/logo.png" alt="Edén Logo" className="logo-img" />
+              <div className="logo-text">
+                EDÉN
+                <span className="logo-sub">barra de ensaladas</span>
+              </div>
             </div>
+            
+            <button className="cart-icon-btn" onClick={() => setIsCartOpen(true)}>
+              <ShoppingBag size={20} />
+              <span>Carrito</span>
+              {cart.length > 0 && <span className="cart-count">{cart.reduce((s,i)=>s+i.quantity, 0)}</span>}
+            </button>
           </div>
-          
-          <button className="cart-icon-btn" onClick={() => setIsCartOpen(true)}>
-            <ShoppingBag size={20} />
-            <span>Carrito</span>
-            {cart.length > 0 && <span className="cart-count">{cart.reduce((s,i)=>s+i.quantity, 0)}</span>}
-          </button>
-        </div>
-      </header>
+        </header>
 
-      {/* CATEGORY BAR */}
-      <nav className={`category-nav ${isNavVisible ? 'visible' : 'hidden'}`}>
-        <ul className="category-list">
-          {CATEGORIES.map(category => (
-            <li key={category.id}>
-              <button 
-                className={`category-btn ${activeCategory === category.id ? 'active' : ''}`}
-                data-category={category.id}
-                onClick={() => {
-                  setActiveCategory(category.id);
-                  const el = document.getElementById(`section-${category.id}`);
-                  if (el) {
-                    const headerOffset = 155;
-                    const elementPosition = el.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.scrollY - headerOffset;
-                    
-                    window.scrollTo({
-                      top: offsetPosition,
-                      behavior: 'smooth'
-                    });
-                  }
-                }}
-              >
-                <span className="category-icon-wrapper">
-                  {getCategoryIcon(category.id)}
-                </span>
-                <span className="category-btn-text">{category.name}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
+        {/* CATEGORY BAR */}
+        <nav className="category-nav">
+          <ul className="category-list">
+            {CATEGORIES.map(category => (
+              <li key={category.id}>
+                <button 
+                  className={`category-btn ${activeCategory === category.id ? 'active' : ''}`}
+                  data-category={category.id}
+                  onClick={() => {
+                    setActiveCategory(category.id);
+                    const el = document.getElementById(`section-${category.id}`);
+                    if (el) {
+                      const headerOffset = 155;
+                      const elementPosition = el.getBoundingClientRect().top;
+                      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+                      
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }}
+                >
+                  <span className="category-icon-wrapper">
+                    {getCategoryIcon(category.id)}
+                  </span>
+                  <span className="category-btn-text">{category.name}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
 
       {/* MAIN CONTAINER */}
       <main className="container">
