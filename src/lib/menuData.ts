@@ -7,6 +7,8 @@ export interface MenuItem {
   image: string;
   category: string;
   customizable?: boolean;
+  flavors?: string[];
+  maxFlavors?: number;
 }
 
 export interface MenuCategory {
@@ -102,7 +104,8 @@ export const MENU_ITEMS: MenuItem[] = [
     prices: { 'Chico': 70, 'Grande': 80 },
     image: '/images/cold_pressed_juice.png',
     category: 'jugos',
-    customizable: true
+    customizable: true,
+    flavors: ['Mandarina', 'Naranja', 'Sandía', 'Verde', 'Pepino', 'Limonada']
   },
   {
     id: 'jugo-mixto',
@@ -112,7 +115,9 @@ export const MENU_ITEMS: MenuItem[] = [
     prices: { 'Chico': 80, 'Grande': 90 },
     image: '/images/cold_pressed_juice.png',
     category: 'jugos',
-    customizable: true
+    customizable: true,
+    flavors: ['Mandarina', 'Naranja', 'Sandía', 'Piña', 'Mango', 'Plátano', 'Fresa', 'Kiwi'],
+    maxFlavors: 2
   },
   {
     id: 'smoothies-deluxe',
@@ -122,7 +127,8 @@ export const MENU_ITEMS: MenuItem[] = [
     prices: { 'Chico': 80, 'Grande': 90 },
     image: '/images/fruit_smoothie.png',
     category: 'jugos',
-    customizable: true
+    customizable: true,
+    flavors: ['Aguacate', 'Zanahoria', 'Mandarina', 'Piña', 'Carambola', 'Kiwi']
   },
   {
     id: 'smoothies-clasicos',
@@ -132,7 +138,8 @@ export const MENU_ITEMS: MenuItem[] = [
     prices: { 'Chico': 70, 'Grande': 80 },
     image: '/images/fruit_smoothie.png',
     category: 'jugos',
-    customizable: true
+    customizable: true,
+    flavors: ['Mango', 'Sandía', 'Naranja', 'Plátano', 'Fresa']
   },
 
   // --- INFUSIONES ---
@@ -144,7 +151,8 @@ export const MENU_ITEMS: MenuItem[] = [
     prices: { 'Chico': 55, 'Grande': 65 },
     image: '/images/cold_pressed_juice.png', // Fallback to glass or we can styled it beautifully
     category: 'infusiones',
-    customizable: true
+    customizable: true,
+    flavors: ['Negro-Durazno', 'Frutos rojos', 'Matcha-Sencha', 'Hierbabuena-Menta', 'Manzana-Canela', 'Manzanilla-Aloe Vera']
   },
 
   // --- WRAPS Y SANDWICHES ---

@@ -171,7 +171,8 @@ a {
 
 /* Category Navigation */
 .category-nav {
-  background-color: var(--color-cream-light);
+  background-color: rgba(253, 251, 247, 0.95);
+  backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--color-ochre-light);
   position: sticky;
   top: 81px;
@@ -179,7 +180,16 @@ a {
   overflow-x: auto;
   white-space: nowrap;
   scrollbar-width: none; /* Firefox */
-  padding: 12px 0;
+  padding: 10px 0;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.category-nav.hidden {
+  transform: translateY(-92px);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .category-nav::-webkit-scrollbar {
@@ -198,19 +208,21 @@ a {
 .category-btn {
   background-color: var(--color-cream-dark);
   border: 1px solid var(--color-ochre-light);
-  padding: 8px 18px;
-  border-radius: 25px;
-  font-weight: 600;
+  padding: 6px 18px 6px 8px;
+  border-radius: 30px;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   transition: var(--transition-smooth);
+  color: var(--color-text-muted);
 }
 
 .category-btn:hover {
   background-color: var(--color-ochre-light);
   color: var(--color-green-dark);
+  border-color: var(--color-ochre);
 }
 
 .category-btn.active {
@@ -218,6 +230,75 @@ a {
   color: var(--color-white);
   border-color: var(--color-terracotta);
   box-shadow: 0 4px 10px rgba(192, 90, 62, 0.25);
+}
+
+/* Circular Category Icon Wrappers */
+.category-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: var(--transition-smooth);
+}
+
+/* Specific color themes for each category circle (inactive state) */
+.category-btn[data-category="ensaladas"] .category-icon-wrapper {
+  background-color: rgba(46, 125, 50, 0.12);
+  color: #2e7d32;
+}
+.category-btn[data-category="jugos"] .category-icon-wrapper {
+  background-color: rgba(244, 81, 30, 0.12);
+  color: #f4511e;
+}
+.category-btn[data-category="infusiones"] .category-icon-wrapper {
+  background-color: rgba(141, 110, 99, 0.15);
+  color: #8d6e63;
+}
+.category-btn[data-category="burritos-sandwiches"] .category-icon-wrapper {
+  background-color: rgba(212, 163, 95, 0.2);
+  color: #b8860b;
+}
+.category-btn[data-category="bowls"] .category-icon-wrapper {
+  background-color: rgba(27, 59, 43, 0.12);
+  color: var(--color-green-dark);
+}
+.category-btn[data-category="embotellada"] .category-icon-wrapper {
+  background-color: rgba(3, 169, 244, 0.12);
+  color: #03a9f4;
+}
+
+/* Hover scaling */
+.category-btn:hover .category-icon-wrapper {
+  transform: scale(1.08);
+}
+
+/* Active state for category badges */
+.category-btn.active .category-icon-wrapper {
+  background-color: var(--color-white);
+}
+.category-btn.active[data-category="ensaladas"] .category-icon-wrapper {
+  color: #2e7d32;
+}
+.category-btn.active[data-category="jugos"] .category-icon-wrapper {
+  color: #f4511e;
+}
+.category-btn.active[data-category="infusiones"] .category-icon-wrapper {
+  color: #8d6e63;
+}
+.category-btn.active[data-category="burritos-sandwiches"] .category-icon-wrapper {
+  color: #b8860b;
+}
+.category-btn.active[data-category="bowls"] .category-icon-wrapper {
+  color: var(--color-green-dark);
+}
+.category-btn.active[data-category="embotellada"] .category-icon-wrapper {
+  color: #03a9f4;
+}
+
+.category-btn-text {
+  font-size: 0.9rem;
 }
 
 /* Hero Section */
@@ -350,6 +431,36 @@ a {
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--color-terracotta);
+}
+
+.product-price-multi {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--color-terracotta);
+  flex-wrap: wrap;
+  max-width: 150px;
+}
+
+.product-price-multi .price-option {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.product-price-multi .price-label {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.product-price-multi .price-divider {
+  color: var(--color-ochre-light);
+  font-weight: 400;
 }
 
 .add-btn {

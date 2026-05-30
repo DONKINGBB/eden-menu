@@ -287,6 +287,7 @@ export default function AdminPage() {
                                   {item.customizations.toppings.length > 0 && <div>• Toppings: {item.customizations.toppings.join(', ')}</div>}
                                   {item.customizations.seedsAndNuts.length > 0 && <div>• Semillas/Frutos: {item.customizations.seedsAndNuts.join(', ')}</div>}
                                   {item.customizations.dressings.length > 0 && <div>• Aderezo: {item.customizations.dressings.join(', ')}</div>}
+                                  {item.customizations.flavors && item.customizations.flavors.length > 0 && <div>• Sabor: {item.customizations.flavors.join(', ')}</div>}
                                 </div>
                               )}
                             </div>
@@ -368,7 +369,8 @@ export default function AdminPage() {
                                   {item.customizations.proteins.length > 0 && <span>Prot: {item.customizations.proteins.join(', ')} | </span>}
                                   {item.customizations.toppings.length > 0 && <span>Toppings: {item.customizations.toppings.join(', ')} | </span>}
                                   {item.customizations.seedsAndNuts.length > 0 && <span>Semillas: {item.customizations.seedsAndNuts.join(', ')} | </span>}
-                                  {item.customizations.dressings.length > 0 && <span>Aderezo: {item.customizations.dressings.join(', ')}</span>}
+                                  {item.customizations.dressings.length > 0 && <span>Aderezo: {item.customizations.dressings.join(', ')} | </span>}
+                                  {item.customizations.flavors && item.customizations.flavors.length > 0 && <span>Sabor: {item.customizations.flavors.join(', ')}</span>}
                                 </div>
                               )}
                             </div>

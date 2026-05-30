@@ -265,6 +265,7 @@ export default function OrderStatusPage() {
                         {item.customizations.toppings.length > 0 && <div>• Toppings: {item.customizations.toppings.join(', ')}</div>}
                         {item.customizations.seedsAndNuts.length > 0 && <div>• Semillas/Frutos: {item.customizations.seedsAndNuts.join(', ')}</div>}
                         {item.customizations.dressings.length > 0 && <div>• Aderezo: {item.customizations.dressings.join(', ')}</div>}
+                        {item.customizations.flavors && item.customizations.flavors.length > 0 && <div>• Sabor: {item.customizations.flavors.join(', ')}</div>}
                       </div>
                     )}
                   </div>

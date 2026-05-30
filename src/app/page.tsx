@@ -13,7 +13,13 @@ import {
   ArrowRight, 
   MessageSquare, 
   Sparkles,
-  Info
+  Info,
+  Salad,
+  CupSoda,
+  Coffee,
+  Sandwich,
+  Soup,
+  GlassWater
 } from 'lucide-react';
 import { MENU_ITEMS, CATEGORIES, SALAD_OPTIONS, MenuItem } from '@/lib/menuData';
 
@@ -30,15 +36,36 @@ interface CartItem {
     seedsAndNuts: string[];
     dressings: string[];
     extras: string[];
+    flavors: string[];
   };
   notes?: string;
+}
+
+function getCategoryIcon(id: string) {
+  switch (id) {
+    case 'ensaladas':
+      return <Salad size={20} />;
+    case 'jugos':
+      return <CupSoda size={20} />;
+    case 'infusiones':
+      return <Coffee size={20} />;
+    case 'burritos-sandwiches':
+      return <Sandwich size={20} />;
+    case 'bowls':
+      return <Soup size={20} />;
+    case 'embotellada':
+      return <GlassWater size={20} />;
+    default:
+      return null;
+  }
 }
 
 export default function MenuPage() {
   const router = useRouter();
 
-  // Navigation
+  // Navigation and Scroll-hide Header
   const [activeCategory, setActiveCategory] = useState('ensaladas');
+  const [isNavVisible, setIsNavVisible] = useState(true);
 
   // Cart State
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -52,6 +79,7 @@ export default function MenuPage() {
   const [selectedSeeds, setSelectedSeeds] = useState<string[]>([]);
   const [selectedDressings, setSelectedDressings] = useState<string[]>([]);
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
+  const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
   const [customNotes, setCustomNotes] = useState('');
 
   // Checkout & Auth Modal State
@@ -76,6 +104,33 @@ export default function MenuPage() {
         console.error(e);
       }
     }
+  }, []);
+
+  // Scroll direction listener to show/hide category nav (optimized)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let lastScrollY = window.scrollY;
+    
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Minimum scroll diff to trigger visibility change
+      if (Math.abs(currentScrollY - lastScrollY) < 10) return;
+
+      if (currentScrollY < 50) {
+        setIsNavVisible(true);
+      } else if (currentScrollY > lastScrollY) {
+        setIsNavVisible(false);
+      } else {
+        setIsNavVisible(true);
+      }
+      
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Save cart to localStorage
@@ -110,6 +165,7 @@ export default function MenuPage() {
     setSelectedSeeds([]);
     setSelectedDressings([]);
     setSelectedExtras([]);
+    setSelectedFlavors([]);
     setCustomNotes('');
 
     // If product is not customizable, add directly to cart
@@ -170,7 +226,8 @@ export default function MenuPage() {
       toppings: selectedToppings.map(t => SALAD_OPTIONS.toppings.find(item => item.id === t)?.name || t),
       seedsAndNuts: selectedSeeds.map(s => SALAD_OPTIONS.seedsAndNuts.find(item => item.id === s)?.name || s),
       dressings: selectedDressings.map(d => SALAD_OPTIONS.dressings.find(item => item.id === d)?.name || d),
-      extras: selectedExtras
+      extras: selectedExtras,
+      flavors: selectedFlavors
     };
 
     const cartItem: CartItem = {
@@ -355,22 +412,32 @@ export default function MenuPage() {
       </header>
 
       {/* CATEGORY BAR */}
-      <nav className="category-nav">
+      <nav className={`category-nav ${isNavVisible ? 'visible' : 'hidden'}`}>
         <ul className="category-list">
           {CATEGORIES.map(category => (
             <li key={category.id}>
               <button 
                 className={`category-btn ${activeCategory === category.id ? 'active' : ''}`}
+                data-category={category.id}
                 onClick={() => {
                   setActiveCategory(category.id);
                   const el = document.getElementById(`section-${category.id}`);
                   if (el) {
-                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const headerOffset = 155;
+                    const elementPosition = el.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.scrollY - headerOffset;
+                    
+                    window.scrollTo({
+                      top: offsetPosition,
+                      behavior: 'smooth'
+                    });
                   }
                 }}
               >
-                <span>{category.icon}</span>
-                <span>{category.name}</span>
+                <span className="category-icon-wrapper">
+                  {getCategoryIcon(category.id)}
+                </span>
+                <span className="category-btn-text">{category.name}</span>
               </button>
             </li>
           ))}
@@ -410,11 +477,15 @@ export default function MenuPage() {
                       <h3 className="product-name">{product.name}</h3>
                       {product.description && <p className="product-desc">{product.description}</p>}
                       <div className="product-footer">
-                        <span className="product-price">
-                          {product.prices 
-                            ? `$${product.prices['Chico']} - $${product.prices['Grande']}` 
-                            : `$${product.price}`}
-                        </span>
+                        {product.prices ? (
+                          <div className="product-price-multi">
+                            <span className="price-option"><span className="price-label">Chico</span> ${product.prices['Chico']}</span>
+                            <span className="price-divider">|</span>
+                            <span className="price-option"><span className="price-label">Grande</span> ${product.prices['Grande']}</span>
+                          </div>
+                        ) : (
+                          <span className="product-price">${product.price}</span>
+                        )}
                         <button className="add-btn" onClick={() => handleAddToCartClick(product)}>
                           <Plus size={16} />
                           <span>{product.customizable ? 'Personalizar' : 'Agregar'}</span>
@@ -656,6 +727,55 @@ export default function MenuPage() {
                 </>
               )}
 
+              {/* Flavor Selector for Drinks & Infusions */}
+              {selectedProduct.flavors && (
+                <div className="option-group">
+                  <div className="option-group-title">
+                    <span>Sabor a elegir</span>
+                    {selectedProduct.maxFlavors && selectedProduct.maxFlavors > 1 ? (
+                      <span className="option-group-limit">Hasta {selectedProduct.maxFlavors} sabores</span>
+                    ) : (
+                      <span className="option-group-limit">Obligatorio</span>
+                    )}
+                  </div>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginBottom: '10px' }}>
+                    {selectedProduct.maxFlavors && selectedProduct.maxFlavors > 1
+                      ? `Elige hasta ${selectedProduct.maxFlavors} sabores combinados.`
+                      : 'Selecciona el sabor para tu bebida.'}
+                  </p>
+                  <div className="option-grid">
+                    {selectedProduct.flavors.map(flavor => {
+                      const isChecked = selectedFlavors.includes(flavor);
+                      return (
+                        <label key={flavor} className="option-card-label">
+                          <input 
+                            type={selectedProduct.maxFlavors && selectedProduct.maxFlavors > 1 ? "checkbox" : "radio"}
+                            name="flavor"
+                            className="option-card-input"
+                            checked={isChecked}
+                            onChange={() => {
+                              const max = selectedProduct.maxFlavors || 1;
+                              if (isChecked) {
+                                setSelectedFlavors(selectedFlavors.filter(f => f !== flavor));
+                              } else {
+                                if (max === 1) {
+                                  setSelectedFlavors([flavor]);
+                                } else if (selectedFlavors.length < max) {
+                                  setSelectedFlavors([...selectedFlavors, flavor]);
+                                }
+                              }
+                            }}
+                          />
+                          <div className="option-card-content">
+                            <span>{flavor}</span>
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* Notes */}
               <div className="option-group" style={{ borderBottom: 'none', paddingBottom: 0 }}>
                 <div className="option-group-title">Notas especiales para tu pedido</div>
@@ -698,7 +818,8 @@ export default function MenuPage() {
                 disabled={
                   (selectedProduct.category === 'ensaladas' && selectedDressings.length === 0) || 
                   ((selectedProduct.id === 'bowl-avena' || selectedProduct.id === 'bowl-yogurt') && 
-                   (selectedToppings.length !== 2 || selectedSeeds.length !== 2))
+                   (selectedToppings.length !== 2 || selectedSeeds.length !== 2)) ||
+                  (selectedProduct.flavors !== undefined && selectedFlavors.length === 0)
                 }
               >
                 Agregar al Carrito
@@ -749,6 +870,9 @@ export default function MenuPage() {
                             )}
                             {item.customizations.dressings.length > 0 && (
                               <div><strong>Aderezo:</strong> {item.customizations.dressings.join(', ')}</div>
+                            )}
+                            {item.customizations.flavors && item.customizations.flavors.length > 0 && (
+                              <div><strong>Sabor:</strong> {item.customizations.flavors.join(', ')}</div>
                             )}
                           </div>
                         )}
