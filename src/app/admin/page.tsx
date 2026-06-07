@@ -196,7 +196,7 @@ export default function AdminPage() {
               style={{ background: 'none', border: '1px solid var(--color-ochre)', color: 'var(--color-text-dark)', display: 'flex', gap: '4px' }}
               disabled={isRefreshing}
             >
-              <RefreshCw size={16} className={isRefreshing ? 'status-animation-ring active' : ''} />
+              <RefreshCw size={16} className={isRefreshing ? 'spin-icon' : ''} />
               <span>Sincronizar</span>
             </button>
             <button className="cart-icon-btn" onClick={handleLogout} style={{ backgroundColor: 'var(--color-terracotta)' }}>
